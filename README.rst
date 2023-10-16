@@ -5,7 +5,27 @@ Annotator is a graphical image annotation tool.
 
 It is written in Python and uses Qt for its graphical interface.
 
+Annotaions are saved as XML files in PASCAL VOC format, the format used by 'ImageNet' <http://www.image-net.org/>.
+
+Installation
+--------------
+
+Ubuntu
+^^^^^^
+Python 3 + Qt5
+
+code::
+    Sudo apt-get install pyqt5-dev-tools
+    sudo pip install lxml
+    make qt5py3
+    python labelImg.py
+    python labelImg.py [IMAGE_PATH] [PRE-DEFINED CLASS FILE]
+
 Windows
+^^^^^^^
+
+PYQ5
+lxml
 
 .. code::
 
