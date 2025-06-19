@@ -1,22 +1,38 @@
-
 try:
     from PyQt5.QtGui import *
     from PyQt5.QtCore import *
     from PyQt5.QtWidgets import *
+    PYQT_VERSION = 5
 except ImportError:
-    from PyQt4.QtGui import *
-    from PyQt4.QtCore import *
+    try:
+        from PyQt4.QtGui import *
+        from PyQt4.QtCore import *
+        PYQT_VERSION = 4
+    except ImportError:
+        # If neither PyQt5 nor PyQt4 is available, we'll handle this gracefully
+        PYQT_VERSION = None
+        # Import will fail at runtime, but this allows static analysis to continue
+        pass
 
 #from PyQt4.QtOpenGL import *
 
 from libs.shape import Shape
 from libs.lib import distance
 
-CURSOR_DEFAULT = Qt.ArrowCursor
-CURSOR_POINT = Qt.PointingHandCursor
-CURSOR_DRAW = Qt.CrossCursor
-CURSOR_MOVE = Qt.ClosedHandCursor
-CURSOR_GRAB = Qt.OpenHandCursor
+# Define cursor constants - these will work if Qt is available
+try:
+    CURSOR_DEFAULT = Qt.ArrowCursor
+    CURSOR_POINT = Qt.PointingHandCursor
+    CURSOR_DRAW = Qt.CrossCursor
+    CURSOR_MOVE = Qt.ClosedHandCursor
+    CURSOR_GRAB = Qt.OpenHandCursor
+except NameError:
+    # Fallback values if Qt is not available
+    CURSOR_DEFAULT = None
+    CURSOR_POINT = None
+    CURSOR_DRAW = None
+    CURSOR_MOVE = None
+    CURSOR_GRAB = None
 
 # class Canvas(QGLWidget):
 
@@ -418,12 +434,12 @@ class Canvas(QWidget):
             p.setPen(color)
             brush = QBrush(Qt.BDiagPattern)
             p.setBrush(brush)
-            p.drawRect(leftTop.x(), leftTop.y(), rectWidth, rectHeight)
+            p.drawRect(int(leftTop.x()), int(leftTop.y()), int(rectWidth), int(rectHeight))
 
         if self.drawing() and not self.prevPoint.isNull() and not self.outOfPixmap(self.prevPoint):
             p.setPen(QColor(0, 0, 0))
-            p.drawLine(self.prevPoint.x(), 0, self.prevPoint.x(), self.pixmap.height())
-            p.drawLine(0, self.prevPoint.y(), self.pixmap.width(), self.prevPoint.y())
+            p.drawLine(int(self.prevPoint.x()), 0, int(self.prevPoint.x()), self.pixmap.height())
+            p.drawLine(0, int(self.prevPoint.y()), self.pixmap.width(), int(self.prevPoint.y()))
 
         self.setAutoFillBackground(True)
         if self.verified:
